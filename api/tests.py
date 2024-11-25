@@ -9,7 +9,6 @@ from decimal import Decimal
 class UserTests(APITestCase):
 
     def setUp(self):
-        # Create a user and log them in
         self.user = User.objects.create_user(username="testuser", password="testpassword123")
         url = reverse('login')
         data = {
@@ -28,36 +27,31 @@ class UserTests(APITestCase):
         }
         response = self.client.post(url, data, format='json')
 
-        # Check if user is created and token is returned
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn('token', response.data)  # Ensure token is returned
-        self.assertIsInstance(response.data['token'], str)  # Token should be a string
-        self.assertGreater(len(response.data['token']), 0)  # Token should not be empty
+        self.assertIn('token', response.data) 
+        self.assertIsInstance(response.data['token'], str)  
+        self.assertGreater(len(response.data['token']), 0)  
 
-        # Save the token for later use in other tests
+        # Saving the token for later use in the other tests
         self.token = response.data['token']
 
     def test_login(self):
-        # Login logic already in setUp
-        self.assertIsNotNone(self.token)  # Ensure that token is set
+        self.assertIsNotNone(self.token)  
 
     def test_logout(self):
         url = reverse('logout')
-        # Add the token to the request header for logout
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.post(url)
 
-        # Check if logout is successful
+        # Checks if logout is successful
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_user_profile(self):
-        # Ensure the correct userID is passed to reverse() for user profile
         url = reverse('user-profile', kwargs={'pk': self.user.pk})
-        # Add the token to the request header for the user profile
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.get(url)
 
-        # Check if user profile is retrieved correctly
+        # Checks if user profile is retrieved correctly
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], self.user.username)
 
@@ -80,16 +74,15 @@ class IncomeTests(APITestCase):
     def test_income_list_create(self):
       url = reverse('income-list')
       data = {
-          'user': self.user.id,  # Ensure the user field is included
+          'user': self.user.id,  
           'title': 'Salary',
-          'amount': '500.00',  # Ensure it's a string that can be converted to Decimal
+          'amount': '500.00',  
           'description': 'Salary for November,'
         }
-      # Add the token to the request header for income creation
       self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
       response = self.client.post(url, data, format='json')
 
-      # Check if income is created successfully
+      # Checks if income is created successfully
       self.assertEqual(response.status_code, status.HTTP_201_CREATED)
       self.assertEqual(response.data['title'], 'Salary')
       self.assertEqual(response.data['amount'], '500.00')
@@ -100,11 +93,10 @@ class IncomeTests(APITestCase):
     def test_income_detail(self):
         income = Income.objects.create(user=self.user, amount=Decimal('500.00'), description='Salary')
         url = reverse('income-detail', kwargs={'pk': income.pk})
-        # Add the token to the request header for income details
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.get(url)
 
-        # Check if correct income detail is retrieved
+        # Checks if correct income detail is retrieved
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['amount'], '500.00')
         self.assertEqual(response.data['description'], 'Salary')
@@ -125,18 +117,17 @@ class ExpenditureTests(APITestCase):
         self.token = login_response.data['token']
 
     def test_expenditure_list_create(self):
-        url = reverse('expenditure-list')  # Updated URL name here
+        url = reverse('expenditure-list') 
         data = {
             'title': 'Groceries',
             'amount': '100.00',
             'date': '2024-11-25',
             'description': 'Monthly grocery shopping'
         }
-        # Add the token to the request header for expenditure creation
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.post(url, data, format='json')
 
-        # Check if expenditure is created successfully
+        # Checks if expenditure is created successfully
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['title'], 'Groceries')
         self.assertEqual(response.data['amount'], '100.00')
@@ -144,11 +135,10 @@ class ExpenditureTests(APITestCase):
     def test_expenditure_detail(self):
         expenditure = Expenditure.objects.create(user=self.user, title='Groceries', amount=Decimal('100.00'), date='2024-11-25', description='Monthly grocery shopping')
         url = reverse('expenditure-detail', kwargs={'pk': expenditure.pk})
-        # Add the token to the request header for expenditure details
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         response = self.client.get(url)
 
-        # Check if correct expenditure detail is retrieved
+        # Checks if correct expenditure detail is retrieved
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Groceries')
         self.assertEqual(response.data['amount'], '100.00')
