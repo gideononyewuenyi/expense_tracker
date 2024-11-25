@@ -69,14 +69,14 @@ python manage.py test
 8. API Endpoints
 Once the server is running, you can test the following API endpoints:
 
-POST /api/auth/signup: Create a new user (Sign Up)
-POST /api/auth/login: Login and obtain a token
-POST /api/auth/logout: Logout and invalidate the token
-GET /api/auth/user/{userID}/profile: Get user profile details
-POST /api/income-list: Create a new income entry
-GET /api/income-detail/{id}: Get details of an income entry
-POST /api/expenditure-list-create: Create a new expenditure entry
-GET /api/expenditure-detail/{id}: Get details of an expenditure entry
+* POST /api/auth/signup: Create a new user (Sign Up)
+* POST /api/auth/login: Login and obtain a token
+* POST /api/auth/logout: Logout and invalidate the token
+* GET /api/auth/user/{userID}/profile: Get user profile details
+* POST /api/income-list: Create a new income entry
+* GET /api/income-detail/{id}: Get details of an income entry
+* POST /api/expenditure-list-create: Create a new expenditure entry
+* GET /api/expenditure-detail/{id}: Get details of an expenditure entry
 
 9. Additional Configuration
 Authentication: The app uses Token-based authentication. Make sure to include the token in the header when making requests. For example:
