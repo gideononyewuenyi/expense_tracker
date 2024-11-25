@@ -22,18 +22,18 @@ cd expense-tracker
 2. Set Up Virtual Environment
 Create a virtual environment to manage dependencies:
 
-# On macOS/Linux
+### On macOS/Linux
 python3 -m venv venv
 
-# On Windows
+### On Windows
 python -m venv venv
 
 Activate the virtual environment:
 
-# On macOS/Linux
+### On macOS/Linux
 source venv/bin/activate
 
-# On Windows
+### On Windows
 venv\Scripts\activate
 
 3. Install Dependencies
